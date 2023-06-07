@@ -40,3 +40,32 @@ def print_user_data():
         print(f"Username: {row[0]}, Password: {row[1]}, Balance: {row[2]:,.2f}, Net_Profit: {row[3]:,.2f}")
 
     conn.close()
+
+
+def get_user_data():
+    # Connect to the database
+    conn = sqlite3.connect('user_database.db')
+    cursor = conn.cursor()
+
+    # Select all rows from the 'user' table
+    select_query = 'SELECT * FROM user'
+    cursor.execute(select_query)
+    rows = cursor.fetchall()
+
+    # Create a list to store user objects
+    user_database = []
+
+    # Iterate through the rows and create User objects
+    for row in rows:
+        username = row[0]
+        password = row[1]
+        balance = row[2]
+        net_profit = row[3]
+        user = User(username, password, balance, net_profit)
+        user_database.append(user)
+
+    # Close the connection
+    conn.close()
+
+    # Return the list of user objects
+    return user_database

@@ -2,5 +2,7 @@ import database_management
 import User
 
 # Initializing user database
-# database_management.init_user_database() - no need to run this function again
-database_management.print_user_data()
+users = database_management.get_user_data()
+
+for user in users:
+    print(user.username, user.password, user.balance, user.net_profit)
