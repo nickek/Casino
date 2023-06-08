@@ -11,5 +11,5 @@ for user in users:
           f"\tNet Profit: {user.net_profit:>10.2f}")
 
 print("\n")
-login_system.login(users)
+user = login_system.login(users)
 visuals.menu()
