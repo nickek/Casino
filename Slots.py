@@ -1,12 +1,11 @@
 import random
 from User import *
-from main import *
 print('''Welcome to the Slot Machine! You'll be asked if you want to play. Answer with yes/no. 
 You win if you get any of the following combinations:
 BAR\tBAR\tBAR\t\twins\t$250
 BELL\tBELL\tBELL/BAR\twins\t$20
 PLUM\tPLUM\tPLUM/BAR\twins\t$14
-ORANGE\tORANGE\tORANGE/wins\tpays\t$10
+ORANGE\tORANGE\tORANGE/BAR\twins\t$10
 CHERRY\tCHERRY\tCHERRY\t\twins\t$7
 CHERRY\tCHERRY\t  -\t\twins\t$5
 CHERRY\t  -\t  -\t\twins\t$2
@@ -17,9 +16,9 @@ ITEMS = ["CHERRY", "LEMON", "ORANGE", "PLUM", "BELL", "BAR"]
 firstWheel = None
 secondWheel = None
 thirdWheel = None
-money = users.balance
+money = user.balance
 
-def play():
+def play(user):
     global money, firstWheel, secondWheel, thirdWheel
     playQuestion = askPlayer()
     while(money != 0 and playQuestion == True):
@@ -80,4 +79,3 @@ def printScore():
     else:
         print(firstWheel + '\t' + secondWheel + '\t' + thirdWheel + ' -- You lose')
 
-play()
