@@ -12,4 +12,23 @@ for user in users:
 
 print("\n")
 user = login_system.login(users)
-visuals.menu()
+
+# Main Program Loop
+while True:
+    # Initializing visuals
+    visuals.menu()
+    visuals.user_info(user)
+    visuals.menu_options()
+
+    # Main menu options
+    option = int(input(''))
+    if option == 1:
+        visuals.games()
+        game_option = int(input(''))
+    elif option == 2:
+        print('working on')
+    elif option == 3:
+        print('working on')
+    elif option == 4:
+        print('Thanks for playing!')
+        break

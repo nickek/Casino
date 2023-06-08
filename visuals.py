@@ -28,3 +28,31 @@ def menu():
  ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀        ▀▀  ▀▀▀▀▀▀▀▀▀▀▀ 
     by Nick, Ethan, Shawn, Marcelo, Zeb and Kyler
     ''')
+
+
+def user_info(user):
+    print(f'Welcome to our Casino ' + user.username + '!')
+    print(f'\tBalance: ', user.balance, '\t Net Profit: ', user.net_profit)
+
+
+def menu_options():
+    print(Color.YELLOW + '''
+\tPress 1 to play Games!
+
+[1] - Games
+[2] - Rules
+[3] - Options
+[4] - Exit
+
+    ''')
+
+
+def games():
+    print(Color.YELLOW + '''
+\tGame List:
+[1] - Black Jack
+[2] - Slots
+[3] - Roulette
+[4] - Poker
+[5] - Exit 
+    ''')
