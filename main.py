@@ -1,10 +1,15 @@
 import database_management
 import User
-# TEST COMMENT
+import login_system
+import visuals
+
 # Initializing user database
-user_database = database_management.read_user_database("user_database.csv")
+users = database_management.get_user_data()
 
-for users in user_database:
-    print(users.username, users.password, users.balance, users.net_profit)
+for user in users:
+    print(f"Username: {user.username:<18} Password: {user.password:<18} Balance: {user.balance:>10.2f} "
+          f"\tNet Profit: {user.net_profit:>10.2f}")
 
-
+print("\n")
+login_system.login(users)
+visuals.menu()

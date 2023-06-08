@@ -1,0 +1,16 @@
+HELLO! Welcome to the Casino Project!
+
+    This file is where we can document progress on our project.
+
+Project Members:
+    Nick Ek
+    Ethan
+    Shawn
+    Marcelo
+    Zeb
+    Kyler
+
+[0.0.1]:
+    * Created database file and functions to read user data into class
+    * Visuals started menu visual complete
+    * Changelog created
