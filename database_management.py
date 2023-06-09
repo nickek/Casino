@@ -5,9 +5,10 @@ from User import *
 def init_user_database():
 
     # Connect to the database
+    print('Connecting to database...')
     conn = sqlite3.connect('user_database.db')
     cursor = conn.cursor()
-
+    print('Successfully connected to database!')
     # Make sure value in table
     cursor.execute("CREATE TABLE IF NOT EXISTS user(username, password, balance, net_profit)")
     cursor.execute("""INSERT INTO user VALUES
@@ -27,9 +28,10 @@ def init_user_database():
 
 def print_user_data():
     # Connect to the database
+    print('Connecting to database...')
     conn = sqlite3.connect('user_database.db')
     cursor = conn.cursor()
-
+    print('Successfully connected to database!')
     # Select all rows from the 'user' table
     select_query = 'SELECT * FROM user'
     cursor.execute(select_query)
@@ -44,6 +46,7 @@ def print_user_data():
 
 def get_user_data():
     # Connect to the database
+    print('Connecting to database...')
     conn = sqlite3.connect('user_database.db')
     cursor = conn.cursor()
 
@@ -51,10 +54,10 @@ def get_user_data():
     select_query = 'SELECT * FROM user'
     cursor.execute(select_query)
     rows = cursor.fetchall()
-
+    print('Successfully connected to database!')
     # Create a list to store user objects
     user_database = []
-
+    print('Importing database...')
     # Iterate through the rows and create User objects
     for row in rows:
         username = row[0]
@@ -63,9 +66,42 @@ def get_user_data():
         net_profit = row[3]
         user = User(username, password, balance, net_profit)
         user_database.append(user)
-
+    print('Database import successful!')
     # Close the connection
     conn.close()
 
     # Return the list of user objects
     return user_database
+
+
+def save_userdata(users):
+    # Connect to the database
+    print('Connecting to database...')
+    conn = sqlite3.connect('user_database.db')
+    cursor = conn.cursor()
+    print('Successfully connected to database!')
+    print('Saving userdata into database...')
+    for user in users:
+        select_query = '''
+                    SELECT * FROM user WHERE username = ?
+                '''
+        cursor.execute(select_query, (user.username,))
+        existing_user = cursor.fetchone()
+
+        if existing_user:
+            update_query = '''
+                        UPDATE user SET password = ?, balance = ?, net_profit = ?
+                        WHERE username = ?
+                    '''
+            cursor.execute(update_query, (user.password, user.balance, user.net_profit, user.username))
+            conn.commit()
+            print(f"User '{user.username}' updated\t Balance: '{user.balance}'")
+        else:
+            insert_query = '''
+                        INSERT INTO user (username, password, balance, net_profit)
+                        VALUES (?, ?, ?, ?)
+                    '''
+            cursor.execute(insert_query, (user.username, user.password, user.balance, user.net_profit))
+            conn.commit()
+            print(f"New user '{user.username}' added!\t Balance: '{user.balance}'")
+

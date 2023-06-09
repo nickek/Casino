@@ -26,7 +26,7 @@ while True:
         visuals.games()
         game_option = int(input(''))
     elif option == 2:
-        print('working on')
+        database_management.save_userdata(users)  # DEMO [save function]
     elif option == 3:
         print('working on')
     elif option == 4:

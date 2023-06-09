@@ -40,7 +40,7 @@ def menu_options():
 \tPress 1 to play Games!
 
 [1] - Games
-[2] - Rules
+[2] - DEMO [Save userdata function]
 [3] - Options
 [4] - Exit
 
