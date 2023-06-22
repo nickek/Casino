@@ -1,4 +1,8 @@
 import random
+import sqlite3
+connector = sqlite3.connect("user_database.db") #added to connect game to our user database
+cursor = connector.cursor()
+
 
 class Card:
     def __init__(self, suit, rank):
@@ -41,6 +45,7 @@ class Player:
     def __init__(self, deck):
         self.hand = Hand()
         self.deck = deck
+        self.hit()
         self.hit()
 
     def hit(self):
