@@ -4,6 +4,7 @@ import login_system
 import visuals
 
 # Initializing user database
+database_management.init_user_database()
 users = database_management.get_user_data()
 
 for user in users:
