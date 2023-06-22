@@ -31,7 +31,7 @@ def menu():
 
 
 def user_info(user):
-    print(f'Welcome to our Casino ' + user.username + '!')
+    print(f'Welcome to our Casino ', user.username, '!')
     print(f'\tBalance: ', user.balance, '\t Net Profit: ', user.net_profit)
 
 

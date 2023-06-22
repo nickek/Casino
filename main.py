@@ -6,6 +6,7 @@ import login_system
 import visuals
 
 # Initializing user database
+database_management.init_user_database()
 users = database_management.get_user_data()
 
 for user in users:
@@ -14,7 +15,16 @@ for user in users:
 
 print("\n")
 
-user = login_system.login(users)
+print("Do you have an existing account?\n"
+      "1) Yes\n"
+      "2) No\n")
+existing_account = int(input(''))
+
+if existing_account == 1:
+    user = login_system.login(users)
+if existing_account == 2:
+    user = login_system.register(users)
+
 if user == -1:
     print("Failed Login! Restart and try again!")
     exit()
