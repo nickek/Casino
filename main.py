@@ -15,7 +15,7 @@ for user in users:
 
 print("\n")
 
-print("Do you have an existing account?"
+print("Do you have an existing account?\n"
       "1) Yes\n"
       "2) No\n")
 existing_account = int(input(''))
