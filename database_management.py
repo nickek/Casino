@@ -7,20 +7,22 @@ def init_user_database():
     conn = sqlite3.connect('user_database.db')
     cursor = conn.cursor()
     # Make sure value in table
-    cursor.execute("CREATE TABLE IF NOT EXISTS user(username, password, balance, net_profit)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS cheater(username, password, balance, net_profit, status)")
-    cursor.execute("CREATE TABLE IF NOT EXISTS vip(username, password, balance, net_profit, status)")
-    # cursor.execute("""INSERT INTO user VALUES
-    #     ('Nickek', 'thatguy1', 15000.00, 0.00),
-    #     ('ethanseca', 'ffokcuf', 15000.00, 0.00),
-    #     ('TheMFTenorio', 'iamhimothy123', 15000.00, 0.00),
-    #     ('Brutuss', 'BananaBus', 15000.00, 0.00),
-    #     ('Zebbypoo', 'Slutmeout123', 15000.00, 0.00),
-    #     ('TH3_QU13T_K1DD', 'UtHoTiWuzFeElInU?', 15000.00, 0.00),
-    #     ('Odog', 'Iluvwomen', 15000.00, 0.00),
-    #     ('J', 'Bean', 15000.00, 0.00),
-    #     ('User', 'Pass', 15000.00, 0.00)
-    # """)
+    cursor.execute("CREATE TABLE IF NOT EXISTS user(username TEXT, password TEXT, balance FLOAT, net_profit FLOAT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS cheater(username TEXT, password TEXT, "
+                   "balance FLOAT, net_profit FLOAT, status INT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS vip(username TEXT, password TEXT, "
+                   "balance FLOAT, net_profit FLOAT, status INT)")
+    cursor.execute("""INSERT INTO user VALUES
+        ('Nickek', 'thatguy1', 150000.00, 0.00),
+        ('ethanseca', 'ffokcuf', 15000.00, 0.00),
+        ('TheMFTenorio', 'iamhimothy123', 15000.00, 0.00),
+        ('Brutuss', 'BananaBus', 15000.00, 0.00),
+        ('Zebbypoo', 'Slutmeout123', 15000.00, 0.00),
+        ('TH3_QU13T_K1DD', 'UtHoTiWuzFeElInU?', 15000.00, 0.00),
+        ('Odog', 'Iluvwomen', 15000.00, 0.00),
+        ('J', 'Bean', 15000.00, 0.00),
+        ('User', 'Pass', 15000.00, 0.00)
+    """)
     conn.commit()
     conn.close()
 
@@ -95,6 +97,14 @@ def save_userdata(users):
             cursor.execute(update_query, (user.password, user.balance, user.net_profit, user.username))
             conn.commit()
             print(f"User '{user.username}' updated\t Balance: '{user.balance}'")
+            if user.balance >= 100000:
+                insert_query = '''
+                                        INSERT INTO vip (username, password, balance, net_profit)
+                                        VALUES (?, ?, ?, ?)
+                                    '''
+                cursor.execute(insert_query, (user.username, user.password, user.balance, user.net_profit))
+                conn.commit()
+
         else:
             insert_query = '''
                         INSERT INTO user (username, password, balance, net_profit)

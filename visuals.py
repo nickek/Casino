@@ -12,7 +12,7 @@ class Color:
 
 def menu():
     print(Color.YELLOW + '''
-        Version: 0.0.1
+        Version: 0.0.2
     ''')
     print(Color.GREEN + '''
  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄        ▄  ▄▄▄▄▄▄▄▄▄▄▄ 
