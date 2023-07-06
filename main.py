@@ -1,5 +1,5 @@
 import sys
-
+import sqlite3
 import database_management
 import User
 import login_system
@@ -30,10 +30,20 @@ if user == -1:
     exit()
 else:
     # Main Program Loop
+    conn = sqlite3.connect('user_database.db')
+    cursor = conn.cursor()
     while True:
         # Initializing visuals
         visuals.menu()
-        visuals.user_info(user)
+        cursor.execute("SELECT * FROM vip WHERE username = ?", (user.username,))
+        vip = cursor.fetchone()
+        if vip:
+            print('\t\t\t\t\tVIP!')
+            status = 1
+            visuals.user_info(user)
+        else:
+            status = 0
+            visuals.user_info(user)
         visuals.menu_options()
 
         # Main menu options
@@ -44,7 +54,7 @@ else:
         elif option == 2:
             database_management.save_userdata(users)  # DEMO [save function]
         elif option == 3:
-            print('working on')
+            print('working on 7/13')
         elif option == 4:
             print('Thanks for playing!')
             break
