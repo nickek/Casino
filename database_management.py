@@ -12,17 +12,17 @@ def init_user_database():
                    "balance FLOAT, net_profit FLOAT, status INT)")
     cursor.execute("CREATE TABLE IF NOT EXISTS vip(username TEXT, password TEXT, "
                    "balance FLOAT, net_profit FLOAT, status INT)")
-    cursor.execute("""INSERT INTO user VALUES
-        ('Nickek', 'thatguy1', 150000.00, 0.00),
-        ('ethanseca', 'ffokcuf', 15000.00, 0.00),
-        ('TheMFTenorio', 'iamhimothy123', 15000.00, 0.00),
-        ('Brutuss', 'BananaBus', 15000.00, 0.00),
-        ('Zebbypoo', 'Slutmeout123', 15000.00, 0.00),
-        ('TH3_QU13T_K1DD', 'UtHoTiWuzFeElInU?', 15000.00, 0.00),
-        ('Odog', 'Iluvwomen', 15000.00, 0.00),
-        ('J', 'Bean', 15000.00, 0.00),
-        ('User', 'Pass', 15000.00, 0.00)
-    """)
+    # cursor.execute("""INSERT INTO user VALUES
+    #     ('Nickek', 'thatguy1', 150000.00, 0.00),
+    #     ('ethanseca', 'ffokcuf', 15000.00, 0.00),
+    #     ('TheMFTenorio', 'iamhimothy123', 15000.00, 0.00),
+    #     ('Brutuss', 'BananaBus', 15000.00, 0.00),
+    #     ('Zebbypoo', 'Slutmeout123', 15000.00, 0.00),
+    #     ('TH3_QU13T_K1DD', 'UtHoTiWuzFeElInU?', 15000.00, 0.00),
+    #     ('Odog', 'Iluvwomen', 15000.00, 0.00),
+    #     ('J', 'Bean', 15000.00, 0.00),
+    #     ('User', 'Pass', 15000.00, 0.00)
+    # """)
     conn.commit()
     conn.close()
 
