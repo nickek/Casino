@@ -5,6 +5,7 @@ import User
 import login_system
 import visuals
 import Slots
+import options
 
 # Initializing user database
 database_management.init_user_database()
@@ -58,7 +59,7 @@ else:
         elif option == 2:
             database_management.save_userdata(users)  # DEMO [save function]
         elif option == 3:
-            print('working on 7/13')
+            options.user_options()
         elif option == 4:
             print('Thanks for playing!')
             break
