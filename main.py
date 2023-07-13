@@ -55,6 +55,7 @@ else:
             game_option = int(input(''))
             if game_option == 2:
                 Slots.play(user)
+                database_management.save_userdata(users)
 
         elif option == 2:
             database_management.save_userdata(users)  # DEMO [save function]
