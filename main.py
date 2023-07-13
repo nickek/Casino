@@ -4,6 +4,7 @@ import database_management
 import User
 import login_system
 import visuals
+import Slots
 
 # Initializing user database
 database_management.init_user_database()
@@ -51,6 +52,9 @@ else:
         if option == 1:
             visuals.games()
             game_option = int(input(''))
+            if game_option == 2:
+                Slots.play(user)
+
         elif option == 2:
             database_management.save_userdata(users)  # DEMO [save function]
         elif option == 3:
