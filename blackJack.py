@@ -137,7 +137,6 @@ def main(user):
                     break
             elif choice == '2':  # stand
                 user.stand()
-                print("----------------------------------")
                 pc.game(user)
                 break
             elif choice == '3': # double down
