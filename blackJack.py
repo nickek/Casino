@@ -97,7 +97,8 @@ class Dealer(Player):
             self.final_see_card()
             print("It's a tie!")
 
-def main():
+def main(user):
+
     random.seed()  # sets random seed
     print("Welcome to my Casino!")
     print("Let's play Blackjack!")
