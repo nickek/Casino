@@ -131,6 +131,7 @@ def main(user):
                 user.hit()
                 if user.value() > 21:
                     print("You bust! Dealer wins!")
+                    user.see_cards()
                     pc.final_see_card()
                     print("----------------------------------")
                     break
