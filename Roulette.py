@@ -1,212 +1,167 @@
 import random
 from User import *
+import time
 
-# Constants
-ROULETTE_NUMBERS = ["00"] + [str(i) for i in range(0, 37)]
-CHIP_VALUES = [1, 5, 10, 25, 50, 100]
-BET_PAYOUTS = {
-    "straight": 35,
-    "split": 17,
-    "street": 11,
-    "corner": 8,
-    "five": 6,
-    "line": 5,
-    "dozen": 2,
-    "column": 2,
-    "low": 1,
-    "high": 1,
-    "red": 1,
-    "black": 1,
-    "odd": 1,
-    "even": 1
+red, black, green = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36], [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35], [0]
+
+game_still_going = True
+broke = False
+bet_options = ["red", "black", "green", "high", "low", "odd", "even", "specific"]
+payouts = {
+    "red": 2,
+    "black": 2,
+    "green": 35,
+    "high": 2,
+    "low": 2,
+    "odd": 2,
+    "even": 2,
+    "specific": 35
 }
+bank = 0
+betamount = 0
+colour_choice = ""
+roll_result = ""
+win_red = False
+win_green = False
+win_black = False
+lose = False
+resulting_number = None
 
-# Represents the ball used in the roulette game
-class Ball:
-    def __init__(self):
-        self.number = None
+def intro():
+    global bank
+    print('Welcome to Roulette! \n')
+    time.sleep(0.5)
+    bank = int(input('Enter starting bankroll: '))
 
-    def spin(self):
-        self.number = random.choice(ROULETTE_NUMBERS)
+def display_table():
+    print("Roulette Table")
+    print("Red: ")
+    print(red)
+    print("Black:")
+    print(black)
+    print("Green:")
+    print(green)
 
-# Represents the casino
-class Casino:
-    def __init__(self, initial_balance):
-        self.balance = initial_balance
-        self.bet_amount = 0
-        self.bet_type = ""
-        self.bet_numbers = []
-        self.ball_speed = 0.5
-        self.ball = Ball()
+def handle_turn():
+    global colour_choice
+    global betamount
+    global bank
 
-    def draw_balance(self):
-        print(f"Balance: ${self.balance}")
+    bet_options_str = ", ".join(bet_options)
+    print("Available betting options: " + bet_options_str)
 
-    def draw_chip_values(self):
-        print("Available chip values: $1, $5, $10, $25, $50, $100")
+    valid_bet = False
+    while not valid_bet:
+        try:
+            bet_choice = input("\nChoose a betting option: ").lower()
+            if bet_choice not in bet_options:
+                raise ValueError("Invalid bet option.")
 
-    def draw_bet_area(self):
-        print(f"Current bet amount: ${self.bet_amount}")
+            betamount = int(input(f"\nBet amount? (€{bank} available)\n"))
+            if betamount <= 0 or betamount > bank:
+                raise ValueError("Invalid bet amount.")
 
-    def draw_roulette_area(self):
-        print("\n    Roulette Wheel")
-        print("----------------------------")
-        print("  ", end="")
-        for i in range(len(ROULETTE_NUMBERS)):
-            print(f"{ROULETTE_NUMBERS[i]:<4}", end="")
-            if (i + 1) % 6 == 0:
-                print("\n  ", end="")
-        print("\n----------------------------\n")
+            valid_bet = True
+        except ValueError as ve:
+            print(ve)
 
-    def draw(self):
-        self.draw_balance()
-        self.draw_chip_values()
-        self.draw_bet_area()
-        self.draw_roulette_area()
+    print("€" + str(betamount))
+    colour_choice = bet_choice
+    print("€" + str(betamount) + " on " + colour_choice)
+    time.sleep(0.5)
 
-    def update_bet_amount(self, amount):
-        self.bet_amount = amount
+def roll_ball():
+    global roll_result
+    global resulting_number
 
-    def place_bet(self):
-        if self.bet_amount > self.balance:
-            print("Insufficient balance!")
-            return False
-        else:
-            self.balance -= self.bet_amount
-            return True
+    resulting_number = random.randint(0, 36)
+    if resulting_number in red:
+        roll_result = "Red"
+    elif resulting_number in black:
+        roll_result = "Black"
+    elif resulting_number in green:
+        roll_result = "Green"
+    else:
+        roll_result = "Specific"
 
-    def spin_roulette(self):
-        self.ball.spin()
-        self.ball_speed = random.uniform(0.1, 2.0)
+    if colour_choice != "specific":
+        print(roll_result, resulting_number)
 
-    def calculate_payout(self):
-        payout = 0
-        ball_number = self.ball.number
+def check_win():
+    global win_black
+    global win_red
+    global win_green
+    global lose
 
-        if self.bet_type == "straight":
-            if ball_number in self.bet_numbers:
-                payout = self.bet_amount * BET_PAYOUTS["straight"]
-        elif self.bet_type == "split":
-            if ball_number in self.bet_numbers:
-                payout = self.bet_amount * BET_PAYOUTS["split"]
-        elif self.bet_type == "street":
-            if ball_number in self.bet_numbers:
-                payout = self.bet_amount * BET_PAYOUTS["street"]
-        elif self.bet_type == "corner":
-            if ball_number in self.bet_numbers:
-                payout = self.bet_amount * BET_PAYOUTS["corner"]
-        elif self.bet_type == "five":
-            if ball_number in self.bet_numbers:
-                payout = self.bet_amount * BET_PAYOUTS["five"]
-        elif self.bet_type == "line":
-            if ball_number in self.bet_numbers:
-                payout = self.bet_amount * BET_PAYOUTS["line"]
-        elif self.bet_type == "dozen":
-            if ball_number in self.bet_numbers:
-                payout = self.bet_amount * BET_PAYOUTS["dozen"]
-        elif self.bet_type == "column":
-            if ball_number in self.bet_numbers:
-                payout = self.bet_amount * BET_PAYOUTS["column"]
-        elif self.bet_type in ["low", "high", "red", "black", "odd", "even"]:
-            if ball_number == self.bet_type:
-                payout = self.bet_amount * BET_PAYOUTS[self.bet_type]
+    win_red = False
+    win_green = False
+    win_black = False
+    lose = False
 
-        return payout
-
-    def reset(self):
-        self.bet_amount = 0
-        self.ball_speed = 0.5
-        self.bet_type = ""
-        self.bet_numbers = []
-        self.ball = Ball()
-
-    def play(self):
-        while True:
-            self.draw()
-
-            if self.balance <= 0:
-                print("Game over! You ran out of money.")
-                break
-
-            self.bet_amount = 0
-            self.bet_type = ""
-            self.bet_numbers = []
-
-            print("Place your bet:")
-            print(" 1. Bet on a single number")
-            print(" 2. Bet on a split")
-            print(" 3. Bet on a street")
-            print(" 4. Bet on a corner")
-            print(" 5. Bet on five numbers")
-            print(" 6. Bet on a line")
-            print(" 7. Bet on dozens")
-            print(" 8. Bet on a column")
-            print(" 9. Bet on low numbers")
-            print("10. Bet on high numbers")
-            print("11. Bet on red")
-            print("12. Bet on black")
-            print("13. Bet on odd")
-            print("14. Bet on even")
-            print("15. Quit\n")
-
-            choice = input("Enter your choice: ")
-
-
-            if choice == "15":
-                print("\nThank you for playing!")
-                break
-
-            elif choice != ["1", "15"]:
-                print("Invalid input! Please enter a number from 1 to 15.")
-
-            if choice in ["1", "2", "3", "4", "6"]:
-                self.bet_type = choice
-                while True:
-                    try:
-                        self.bet_numbers = [input("Enter a number to bet on: ")]
-                        if self.bet_numbers[0] not in ROULETTE_NUMBERS:
-                            raise ValueError
-                        self.update_bet_amount(int(input("Enter your bet amount: $")))
-                        break
-                    except ValueError:
-                        print("Invalid input!")
-            elif choice == "5":
-                self.bet_type = choice
-                while True:
-                    try:
-                        self.bet_numbers = input("Enter five numbers to bet on (separated by commas): ").split(",")
-                        if len(self.bet_numbers) != 5 or any(num not in ROULETTE_NUMBERS for num in self.bet_numbers):
-                            raise ValueError
-                        self.update_bet_amount(int(input("Enter your bet amount: $")))
-                        break
-                    except ValueError:
-                        print("Invalid input!")
-            elif choice in ["7", "8"]:
-                self.bet_type = choice
-                while True:
-                    try:
-                        self.bet_numbers = [input("Enter your bet selection: ")]
-                        self.update_bet_amount(int(input("Enter your bet amount: $")))
-                        break
-                    except ValueError:
-                        print("Invalid input!")
-
+    if colour_choice == "specific":
+        valid_specific = False
+        while not valid_specific:
+            specific_number = int(input("Enter the specific number you want to bet on (0-36): "))
+            if specific_number >= 0 and specific_number <= 36:
+                valid_specific = True
             else:
-                self.bet_type = choice
-                self.update_bet_amount(int(input("Enter your bet amount: $")))
+                print("Invalid number. Please enter a number between 0 and 36.")
 
-            if self.place_bet():
-                self.spin_roulette()
-                payout = self.calculate_payout()
+        print("$" + str(betamount) + " on specific number " + str(specific_number))
+        if specific_number == resulting_number:
+            win_red = True
+            print("Specific number wins!")
+        else:
+            lose = True
+            print("You lose! €" + str(betamount))
+    elif colour_choice in ["red", "black", "green", "high", "low", "odd", "even"]:
+        if (colour_choice == "red" and roll_result == "Red") or (
+                colour_choice == "black" and roll_result == "Black") or (
+                colour_choice == "green" and roll_result == "Green"):
+            win_red = True
+            print(colour_choice.capitalize() + " wins!")
+        elif (colour_choice == "high" and resulting_number > 18) or (colour_choice == "low" and resulting_number <= 18):
+            win_red = True
+            print(colour_choice.capitalize() + " wins!")
+        elif (colour_choice == "odd" and resulting_number % 2 != 0) or (
+                colour_choice == "even" and resulting_number % 2 == 0):
+            win_red = True
+            print(colour_choice.capitalize() + " wins!")
+        else:
+            lose = True
+            print("You lose! €" + str(betamount))
 
-                if payout > 0:
-                    self.balance += payout
-                    print(f"\nCongratulations! You won ${payout}.")
-                else:
-                    print("\nSorry, you lost.")
-                print(f"The ball landed on: {self.ball.number}")
 
-                input("\nPress Enter to continue...")
-                self.reset()
+def check_if_broke():
+    global broke
+    if bank < 1:
+        broke = True
+        print("Broke! Please leave!")
+    else:
+        pass
 
-casino = Casino(1000)
+def increment_bank():
+    global bank
+    if win_red:
+        bank += betamount * payouts[colour_choice]
+    else:
+        bank -= betamount
+
+    print("Bank: €" + str(bank))
+
+def play_game():
+    handle_turn()
+    roll_ball()
+    check_win()
+    increment_bank()
+    check_if_broke()
+
+intro()
+display_table()
+
+while game_still_going:
+    play_game()
+    if broke:
+        break
+    if input("Continue? (y/n)").strip().upper() != 'Y':
+        break
