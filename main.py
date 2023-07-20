@@ -15,16 +15,17 @@ for user in users:
 
 print("\n")
 
-print("Do you have an existing account?\n"
-      "1) Yes\n"
-      "2) No\n")
-existing_account = int(input(''))
+# print("Do you have an existing account?\n"
+#       "1) Yes\n"
+#       "2) No\n")
+# existing_account = int(input(''))
 
-if existing_account == 1:
-    user = login_system.login(users)
-if existing_account == 2:
-    user = login_system.register(users)
 
+# if existing_account == 1:
+#     user = login_system.login(users)
+# if existing_account == 2:
+#     user = login_system.register(users)
+user = login_system.existing_account()
 if user == -1:
     print("Failed Login! Restart and try again!")
     exit()
