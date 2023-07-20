@@ -103,6 +103,9 @@ def main():
     print("Let's play Blackjack!")
     print("Good Luck!")
     print("-------------------------")
+    print("Please place your bet (min. $25) before playing: ")
+
+
 
     deck = Deck()  # creates a deck
     user = Player(deck)  # creates a player that will use deck
@@ -121,7 +124,7 @@ def main():
         print("The dealer won!")
     else:
         while not user.lose():  # while user has not lost yet
-            choice = input("Hit (1) or Stand (2)?: ")  # ask user to hit or stand
+            choice = input("Hit (1), Stand (2), or Double Down (3)?: ")  # ask user to hit or stand
             print("-------------------------")
             if choice == '1':  # hit
                 user.hit()
@@ -135,6 +138,12 @@ def main():
                 print("----------------------------------")
                 pc.game(user)
                 break
+            if choice == '3': # double down
+                #line to double initial bet
+                user.hit()
+                pc.game(user)
+                break
+
             else:  # will ask user to try again if there is wrong input
                 print("Invalid input, please input 1 or 2")
                 print("----------------------------------")
