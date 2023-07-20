@@ -101,11 +101,10 @@ def main(user):
 
     random.seed()  # sets random seed
     print("Let's play Blackjack!")
-
     print("-------------------------")
     money = user.balance
     bet = input("Please place your bet (min. $25) before playing: ")
-    if bet >= '25':
+    while bet >= '25':
         print("Good Luck!")
         deck = Deck()  # creates a deck
         user = Player(deck)  # creates a player that will use deck
@@ -116,10 +115,13 @@ def main(user):
             print("----------------------------------")
             pc.final_see_card()
             print("Blackjack! You win!")
+            winnings = bet * 1.5
+            money = money + winnings
         elif pc.win():  # checks dealer's hand to see if they win
             print("----------------------------------")
             pc.final_see_card()
             print("The dealer won!")
+            money = money - bet
         else:
             while not user.lose():  # while user has not lost yet
                 choice = input("Hit (1), Stand (2), or Double Down (3)?: ")  # ask user to hit or stand
@@ -130,6 +132,7 @@ def main(user):
                         print("You bust! Dealer wins!")
                         user.see_cards()
                         pc.final_see_card()
+                        money = money - bet
                         print("----------------------------------")
                         break
                 elif choice == '2':  # stand
@@ -137,10 +140,14 @@ def main(user):
                     pc.game(user)
                     break
                 elif choice == '3': # double down
+                   if money < 25
+                       print('Please add funds to your account BROKIE!')
+                    else
                     #line to double initial bet
-                    user.hit()
-                    user.see_cards()
-                    pc.game(user)
+                        bet = bet * 2
+                        user.hit()
+                        user.see_cards()
+                        pc.game(user)
                     break
 
                 elif choice != '1' '2' '3':  # will ask user to try again if there is wrong input
