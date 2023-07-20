@@ -61,7 +61,9 @@ else:
         elif option == 2:
             database_management.save_userdata(users)  # DEMO [save function]
         elif option == 3:
-            options.user_options()
+            visuals.user_info(user)
+            options.user_options(user)
+            database_management.save_userdata(users)
         elif option == 4:
             print('Thanks for playing!')
             break
