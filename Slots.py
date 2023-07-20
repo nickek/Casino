@@ -9,6 +9,8 @@ ITEMS = ["CHERRY", "LEMON", "ORANGE", "PLUM", "BELL", "BAR"]
 global condition
 condition = True
 
+
+
 def play(user):
     money = user.balance
     global firstWheel, secondWheel, thirdWheel

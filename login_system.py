@@ -2,7 +2,8 @@ from database_management import *
 from tkinter import *
 from tkinter import messagebox as ms
 
-#gui
+
+# gui
 def existing_account():
     global main_screen
     main_screen = Tk()
@@ -88,6 +89,7 @@ def registration_verification():
     conn.commit()
     cursor.execute("SELECT balance FROM user WHERE username = '{}'".format(username_register.get()))
     y = cursor.fetchone()
+    # ADD VIP CHECK????
     if y:
         ms.showinfo("Congrats!", "Registration Successful!")
         user = User(username_register.get(), password_register.get(), start_balance.get(), 0)

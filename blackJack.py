@@ -97,49 +97,66 @@ class Dealer(Player):
             self.final_see_card()
             print("It's a tie!")
 
-def main():
+def main(user):
+
     random.seed()  # sets random seed
-    print("Welcome to my Casino!")
     print("Let's play Blackjack!")
-    print("Good Luck!")
     print("-------------------------")
+    money = user.balance
+    print("Balance: " + str(money))
+    bet = input("Please place your bet (min. $25) before playing: ")
 
-    deck = Deck()  # creates a deck
-    user = Player(deck)  # creates a player that will use deck
-    pc = Dealer(deck)  # creates a dealer that will use the same deck
 
-    user.see_cards()
-    pc.see_card()
-
-    if user.win():  # checks user's hand to see if they win
-        print("----------------------------------")
-        pc.final_see_card()
-        print("Blackjack! You win!")
-    elif pc.win():  # checks dealer's hand to see if they win
-        print("----------------------------------")
-        pc.final_see_card()
-        print("The dealer won!")
-    else:
-        while not user.lose():  # while user has not lost yet
-            choice = input("Hit (1) or Stand (2)?: ")  # ask user to hit or stand
-            print("-------------------------")
-            if choice == '1':  # hit
-                user.hit()
-                if user.value() > 21:
-                    print("You bust! Dealer wins!")
-                    pc.final_see_card()
-                    print("----------------------------------")
+    while bet >= '25':
+        print("Good Luck!")
+        deck = Deck()  # creates a deck
+        user = Player(deck)  # creates a player that will use deck
+        pc = Dealer(deck)  # creates a dealer that will use the same deck
+        user.see_cards()
+        pc.see_card()
+        if user.win():  # checks user's hand to see if they win
+            print("----------------------------------")
+            pc.final_see_card()
+            print("Blackjack! You win!")
+            winnings = bet * 1.5
+            money = money + winnings
+        elif pc.win():  # checks dealer's hand to see if they win
+            print("----------------------------------")
+            pc.final_see_card()
+            print("The dealer won!")
+            money = money - bet
+        else:
+            while not user.lose():  # while user has not lost yet
+                choice = input("Hit (1), Stand (2), or Double Down (3)?: ")  # ask user to hit or stand
+                print("-------------------------")
+                if choice == '1':  # hit
+                    user.hit()
+                    if user.value() > 21:
+                        print("You bust! Dealer wins!")
+                        user.see_cards()
+                        pc.final_see_card()
+                        money = money - bet
+                        print("----------------------------------")
+                        break
+                elif choice == '2':  # stand
+                    user.stand()
+                    pc.game(user)
                     break
-            elif choice == '2':  # stand
-                user.stand()
-                print("----------------------------------")
-                pc.game(user)
-                break
-            else:  # will ask user to try again if there is wrong input
-                print("Invalid input, please input 1 or 2")
-                print("----------------------------------")
-            user.see_cards()  # shows user's cards
-            pc.see_card()  # shows dealer's card
+                elif choice == '3': # double down
+                   if money < 25:
+                       print('Please add funds to your account BROKIE!')
+                   else:
+                    #line to double initial bet
+                        bet = bet * 2
+                        user.hit()
+                        user.see_cards()
+                        pc.game(user)
+
+                elif choice != '1' '2' '3':  # will ask user to try again if there is wrong input
+                    print("Invalid input, please input 1, 2, or 3")
+                    print("----------------------------------")
+                user.see_cards()  # shows user's cards
+                pc.see_card()  # shows dealer's card
 #
 if __name__ == "__main__":
     main()
