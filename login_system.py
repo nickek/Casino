@@ -2,7 +2,7 @@ from database_management import *
 from tkinter import *
 from tkinter import messagebox as ms
 
-#
+#gui
 def existing_account():
     global main_screen
     main_screen = Tk()
