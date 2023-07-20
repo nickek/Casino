@@ -56,7 +56,7 @@ else:
             visuals.games()
             game_option = int(input(''))
             if game_option == 1:
-                blackJack.play(user)
+                blackJack.main(user)
                 database_management.save_userdata(users)
             if game_option == 2:
                 Slots.play(user)
