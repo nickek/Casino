@@ -140,14 +140,15 @@ def main(user):
                 print("----------------------------------")
                 pc.game(user)
                 break
-            if choice == '3': # double down
+            elif choice == '3': # double down
                 #line to double initial bet
                 user.hit()
+                user.see_cards()
                 pc.game(user)
                 break
 
-            else:  # will ask user to try again if there is wrong input
-                print("Invalid input, please input 1 or 2")
+            elif choice != '1' '2' '3':  # will ask user to try again if there is wrong input
+                print("Invalid input, please input 1, 2, or 3")
                 print("----------------------------------")
             user.see_cards()  # shows user's cards
             pc.see_card()  # shows dealer's card
