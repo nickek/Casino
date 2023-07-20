@@ -97,12 +97,16 @@ class Dealer(Player):
             self.final_see_card()
             print("It's a tie!")
 
-def main():
+def main(user):
+
     random.seed()  # sets random seed
     print("Welcome to my Casino!")
     print("Let's play Blackjack!")
     print("Good Luck!")
     print("-------------------------")
+    print("Please place your bet (min. $25) before playing: ")
+
+
 
     deck = Deck()  # creates a deck
     user = Player(deck)  # creates a player that will use deck
@@ -121,22 +125,29 @@ def main():
         print("The dealer won!")
     else:
         while not user.lose():  # while user has not lost yet
-            choice = input("Hit (1) or Stand (2)?: ")  # ask user to hit or stand
+            choice = input("Hit (1), Stand (2), or Double Down (3)?: ")  # ask user to hit or stand
             print("-------------------------")
             if choice == '1':  # hit
                 user.hit()
                 if user.value() > 21:
                     print("You bust! Dealer wins!")
+                    user.see_cards()
                     pc.final_see_card()
                     print("----------------------------------")
                     break
             elif choice == '2':  # stand
                 user.stand()
-                print("----------------------------------")
                 pc.game(user)
                 break
-            else:  # will ask user to try again if there is wrong input
-                print("Invalid input, please input 1 or 2")
+            elif choice == '3': # double down
+                #line to double initial bet
+                user.hit()
+                user.see_cards()
+                pc.game(user)
+                break
+
+            elif choice != '1' '2' '3':  # will ask user to try again if there is wrong input
+                print("Invalid input, please input 1, 2, or 3")
                 print("----------------------------------")
             user.see_cards()  # shows user's cards
             pc.see_card()  # shows dealer's card
