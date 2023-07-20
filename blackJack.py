@@ -104,10 +104,10 @@ def main(user):
     print("-------------------------")
     money = user.balance
     print("Balance: " + str(money))
-    bet = input("Please place your bet (min. $25) before playing: ")
+    bet = int(input("Please place your bet (min. $25) before playing: "))
 
 
-    while bet >= '25':
+    while bet >= 25:
         print("Good Luck!")
         deck = Deck()  # creates a deck
         user = Player(deck)  # creates a player that will use deck
