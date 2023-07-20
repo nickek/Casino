@@ -14,3 +14,9 @@ Project Members:
     * Created database file and functions to read user data into class
     * Visuals started menu visual complete
     * Changelog created
+
+[0.0.2]:
+    * Project is an active cloud project (via Github)
+    * Login system / main code visuals done
+    * Added high roller database
+    * Waiting on Games to be implemented and working on anti cheat system

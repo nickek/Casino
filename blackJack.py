@@ -66,23 +66,35 @@ class Player:
 
     def stand(self):
         pass
+    def value(self):
+        return self.hand.get_value()
 
 class Dealer(Player):
     def see_card(self):
-        print("Dealer's card:")
+        print("Dealer's cards:")
         print(f"{self.hand.cards[0].rank} of {self.hand.cards[0].suit}")
+
+    def final_see_card(self):
+        print("Dealer's cards:")
+        for card in self.hand.cards:
+            print(f"{card.rank} of {card.suit}")
+        print("Total value:", self.hand.get_value())
 
     def game(self, user):
         while self.hand.get_value() < 17:
             self.hit()
-        self.see_cards()
+        #self.see_card()
         if self.hand.get_value() > 21:
+            self.final_see_card()
             print("Dealer busts! You win!")
         elif self.hand.get_value() > user.hand.get_value():
+            self.final_see_card()
             print("Dealer wins!")
         elif self.hand.get_value() < user.hand.get_value():
-            print("You win!")
+            self.final_see_card()
+            print("You beat the dealer! You win!")
         else:
+            self.final_see_card()
             print("It's a tie!")
 
 def main():
@@ -100,16 +112,27 @@ def main():
     pc.see_card()
 
     if user.win():  # checks user's hand to see if they win
-        print("You won!")
+        print("----------------------------------")
+        pc.final_see_card()
+        print("Blackjack! You win!")
     elif pc.win():  # checks dealer's hand to see if they win
+        print("----------------------------------")
+        pc.final_see_card()
         print("The dealer won!")
     else:
         while not user.lose():  # while user has not lost yet
             choice = input("Hit (1) or Stand (2)?: ")  # ask user to hit or stand
+            print("-------------------------")
             if choice == '1':  # hit
                 user.hit()
+                if user.value() > 21:
+                    print("You bust! Dealer wins!")
+                    pc.final_see_card()
+                    print("----------------------------------")
+                    break
             elif choice == '2':  # stand
                 user.stand()
+                print("----------------------------------")
                 pc.game(user)
                 break
             else:  # will ask user to try again if there is wrong input
@@ -117,6 +140,6 @@ def main():
                 print("----------------------------------")
             user.see_cards()  # shows user's cards
             pc.see_card()  # shows dealer's card
-
+#
 if __name__ == "__main__":
     main()
