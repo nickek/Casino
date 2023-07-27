@@ -49,7 +49,7 @@ def user_options(user):
             cursor.execute(update_query, (deposit_amount, user.username))
             conn.commit()
             user.set_balance(user.balance + deposit_amount)
-            print("Deposit successful!")
+            print(f"Deposit successful! New balance: {user.balance}")
         elif user_op == 4:
             withdraw_amount = float(input('Please select the amount to withdraw: '))
             if withdraw_amount > user.balance:
@@ -63,7 +63,7 @@ def user_options(user):
                 cursor.execute(update_query, (withdraw_amount, user.username))
                 conn.commit()
                 user.set_balance(user.balance - withdraw_amount)
-                print("Withdrawal successful!")
+                print(f"Withdrawal successful! New balance: {user.balance}")
         elif user_op == 5:
             break
         else:

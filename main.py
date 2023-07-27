@@ -57,17 +57,17 @@ else:
             game_option = int(input(''))
             if game_option == 1:
                 blackJack.main(user)
-                database_management.save_userdata(users)
+                database_management.save_userdata(user)
             if game_option == 2:
                 Slots.play(user)
-                database_management.save_userdata(users)
+                database_management.save_userdata(user)
 
         elif option == 2:
             database_management.save_userdata(users)  # DEMO [save function]
         elif option == 3:
             visuals.user_info(user)
             options.user_options(user)
-            database_management.save_userdata(users)
+            database_management.save_userdata(user)
         elif option == 4:
             print('Thanks for playing!')
             break

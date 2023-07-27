@@ -17,3 +17,4 @@ class User:
     def set_balance(self, new_balance):
         self.balance = new_balance
 
+
