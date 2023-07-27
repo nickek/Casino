@@ -81,22 +81,22 @@ def printScore(user):
     money = user.balance
     global firstWheel, secondWheel, thirdWheel
     if ((firstWheel == "CHERRY") and (secondWheel != "CHERRY")):
-        win = 2
+        win = 100
     elif ((firstWheel == "CHERRY") and (secondWheel == "CHERRY") and (thirdWheel != "CHERRY")):
-        win = 5
+        win = 150
     elif ((firstWheel == "CHERRY") and (secondWheel == "CHERRY") and (thirdWheel == "CHERRY")):
-        win = 7
+        win = 100
     elif ((firstWheel == "ORANGE") and (secondWheel == "ORANGE") and (
             (thirdWheel == "ORANGE") or (thirdWheel == "BAR"))):
-        win = 10
+        win = 100
     elif ((firstWheel == "PLUM") and (secondWheel == "PLUM") and ((thirdWheel == "PLUM") or (thirdWheel == "BAR"))):
-        win = 14
+        win = 150
     elif ((firstWheel == "BELL") and (secondWheel == "BELL") and ((thirdWheel == "BELL") or (thirdWheel == "BAR"))):
-        win = 20
+        win = 115
     elif ((firstWheel == "BAR") and (secondWheel == "BAR") and (thirdWheel == "BAR")):
         win = 250
     else:
-        win = -100
+        win = -125
 
     user.balance += win
     if (win > 0):
