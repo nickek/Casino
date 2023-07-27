@@ -7,6 +7,7 @@ import visuals
 import Slots
 import options
 import blackJack
+import Roulette
 
 # Initializing user database
 database_management.init_user_database()
@@ -61,11 +62,16 @@ else:
             if game_option == 2:
                 Slots.play(user)
                 database_management.save_userdata(users)
+            if game_option == 3:
+                Roulette.play_game(user)
+                database_management.save_userdata(users)
 
         elif option == 2:
             database_management.save_userdata(users)  # DEMO [save function]
         elif option == 3:
-            options.user_options()
+            visuals.user_info(user)
+            options.user_options(user)
+            database_management.save_userdata(users)
         elif option == 4:
             print('Thanks for playing!')
             break

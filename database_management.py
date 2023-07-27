@@ -96,7 +96,7 @@ def save_userdata(users):
                     '''
             cursor.execute(update_query, (user.password, user.balance, user.net_profit, user.username))
             conn.commit()
-            print(f"User '{user.username}' updated\t Balance: '{user.balance}'")
+            # print(f"User '{user.username}' updated\t Balance: '{user.balance}'")
             if user.balance >= 100000:
                 insert_query = '''
                                         INSERT INTO vip (username, password, balance, net_profit)
@@ -106,11 +106,13 @@ def save_userdata(users):
                 conn.commit()
 
         else:
-            insert_query = '''
-                        INSERT INTO user (username, password, balance, net_profit)
-                        VALUES (?, ?, ?, ?)
-                    '''
-            cursor.execute(insert_query, (user.username, user.password, user.balance, user.net_profit))
-            conn.commit()
-            print(f"New user '{user.username}' added!\t Balance: '{user.balance}'")
+            print('Error')
+            # insert_query = '''
+            #             INSERT INTO user (username, password, balance, net_profit)
+            #             VALUES (?, ?, ?, ?)
+            #         '''
+            # cursor.execute(insert_query, (user.username, user.password, user.balance, user.net_profit))
+            # conn.commit()
+            # print(f"New user '{user.username}' added!\t Balance: '{user.balance}'")
 
+    print('Saved userdata')
