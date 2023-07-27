@@ -1,12 +1,30 @@
 import random
-from User import *
 import time
+import sqlite3
 
-red, blcak, green = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36], [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35], [0]
+connector = sqlite3.connect("user_database.db")  # added to connect game to our user database
+cursor = connector.cursor()
+
+# Create the users table if it doesn't exist
+
+connector.commit()
+
+red, black, green = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36], [2, 4, 6, 8, 10, 11, 13, 15,
+                                                                                          17, 20, 22, 24, 26, 28, 29,
+                                                                                          31, 33, 35], [0]
 
 game_still_going = True
 broke = False
-bet_options = ["red", "black", "green", "high", "low", "odd", "even", "specific"]
+bet_options = {
+    1: "red",
+    2: "black",
+    3: "green",
+    4: "high",
+    5: "low",
+    6: "odd",
+    7: "even",
+    8: "specific"
+}
 payouts = {
     "red": 2,
     "black": 2,
@@ -17,8 +35,7 @@ payouts = {
     "even": 2,
     "specific": 35
 }
-bank = 0
-betamount = 0
+
 colour_choice = ""
 roll_result = ""
 win_red = False
@@ -27,48 +44,35 @@ win_black = False
 lose = False
 resulting_number = None
 
-def intro():
-    global bank
-    print('Welcome to Roulette! \n')
-    time.sleep(0.5)
-    bank = int(input('Enter starting bankroll: '))
 
-def display_table():
-    print("Roulette Table")
-    print("Red: ")
-    print(red)
-    print("Black:")
-    print(black)
-    print("Green:")
-    print(green)
-
-def handle_turn():
+def handle_turn(user):
     global colour_choice
     global betamount
-    global bank
 
-    bet_options_str = ", ".join(bet_options)
-    print("Available betting options: " + bet_options_str)
+    print("\nBet options:")
+    for key, value in bet_options.items():
+        print(f"{key}: {value.capitalize()}")
 
     valid_bet = False
     while not valid_bet:
         try:
-            bet_choice = input("\nChoose a betting option: ").lower()
+            bet_choice = int(input("\nChoose a betting option (1-8): "))
             if bet_choice not in bet_options:
                 raise ValueError("Invalid bet option.")
 
-            betamount = int(input(f"\nBet amount? (€{bank} available)\n"))
-            if betamount <= 0 or betamount > bank:
+            betamount = int(input(f"\nBet amount? (€{user.balance} available)\n"))
+            if betamount <= 0 or betamount > user.balance:
                 raise ValueError("Invalid bet amount.")
 
             valid_bet = True
         except ValueError as ve:
             print(ve)
 
-    print("€" + str(betamount))
-    colour_choice = bet_choice
-    print("€" + str(betamount) + " on " + colour_choice)
+    print("$" + str(betamount))
+    colour_choice = bet_options[bet_choice]
+    print("$" + str(betamount) + " on " + colour_choice)
     time.sleep(0.5)
+
 
 def roll_ball():
     global roll_result
@@ -86,6 +90,7 @@ def roll_ball():
 
     if colour_choice != "specific":
         print(roll_result, resulting_number)
+
 
 def check_win():
     global win_black
@@ -113,7 +118,7 @@ def check_win():
             print("Specific number wins!")
         else:
             lose = True
-            print("You lose! €" + str(betamount))
+            print("You lose! $" + str(betamount))
     elif colour_choice in ["red", "black", "green", "high", "low", "odd", "even"]:
         if (colour_choice == "red" and roll_result == "Red") or (
                 colour_choice == "black" and roll_result == "Black") or (
@@ -129,39 +134,62 @@ def check_win():
             print(colour_choice.capitalize() + " wins!")
         else:
             lose = True
-            print("You lose! €" + str(betamount))
+            print("You lose! $" + str(betamount))
 
 
-def check_if_broke():
+
+def check_if_broke(user):
     global broke
-    if bank < 1:
+    if user.balance < 1:
         broke = True
         print("Broke! Please leave!")
     else:
         pass
 
-def increment_bank():
-    global bank
+
+def increment_bank(user):
+    global win_red
+
     if win_red:
-        bank += betamount * payouts[colour_choice]
+        user.balance += betamount * payouts[colour_choice]
     else:
-        bank -= betamount
+        user.balance -= betamount
 
-    print("Bank: €" + str(bank))
+    # Update user balance in the database
+    cursor.execute("UPDATE users SET balance = ? WHERE username = ?", (user.balance, user.username))
+    connector.commit()
 
-def play_game():
-    handle_turn()
+    print("Bank: $" + str(user.balance))
+
+
+def play_game(user):
+    global broke
+
+    handle_turn(user)
     roll_ball()
     check_win()
-    increment_bank()
-    check_if_broke()
+    increment_bank(user)
+    check_if_broke(user)
 
-intro()
-display_table()
 
-while game_still_going:
-    play_game()
-    if broke:
-        break
-    if input("Continue? (y/n)").strip().upper() != 'Y':
-        break
+# Main program starts here
+
+class User:
+    def __init__(self, username, balance):
+        self.username = username
+        self.balance = balance
+
+# Create a user object (Replace with the actual username and balance from the user database)
+#username = "JohnDoe"
+#balance = 1000
+#user = User(username, balance)
+
+#while game_still_going:
+  #  play_game(user)
+   # if broke:
+   #     break
+   # if input("Continue? (y/n)").strip().upper() != 'Y':
+   #     break
+
+if __name__ == "__main__":
+    main()
