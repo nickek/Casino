@@ -28,44 +28,43 @@ print("\n")
 #     user = login_system.login(users)
 # if existing_account == 2:
 #     user = login_system.register(users)
+
 user = login_system.existing_account()
-if user == -1:
-    print("Failed Login! Restart and try again!")
-    exit()
-else:
-    # Main Program Loop
-    conn = sqlite3.connect('user_database.db')
-    cursor = conn.cursor()
-    while True:
-        # Initializing visuals
-        visuals.menu()
-        cursor.execute("SELECT * FROM vip WHERE username = ?", (user.username,))
-        vip = cursor.fetchone()
-        if vip:
-            print('\t\t\t\t\tVIP!')
-            status = 1
-            visuals.user_info(user)
-        else:
-            status = 0
-            visuals.user_info(user)
-        visuals.menu_options()
 
-        # Main menu options
-        option = int(input(''))
-        if option == 1:
-            visuals.games()
-            game_option = int(input(''))
-            if game_option == 1:
-                blackJack.main(user)
-                database_management.save_userdata(users)
-            if game_option == 2:
-                Slots.play(user)
-                database_management.save_userdata(users)
 
-        elif option == 2:
-            database_management.save_userdata(users)  # DEMO [save function]
-        elif option == 3:
-            options.user_options()
-        elif option == 4:
-            print('Thanks for playing!')
-            break
+# Main Program Loop
+conn = sqlite3.connect('user_database.db')
+cursor = conn.cursor()
+while True:
+    # Initializing visuals
+    visuals.menu()
+    cursor.execute("SELECT * FROM vip WHERE username = ?", (user.username,))
+    vip = cursor.fetchone()
+    if vip:
+        print('\t\t\t\t\tVIP!')
+        status = 1
+        visuals.user_info(user)
+    else:
+        status = 0
+        visuals.user_info(user)
+    visuals.menu_options()
+
+    # Main menu options
+    option = int(input(''))
+    if option == 1:
+        visuals.games()
+        game_option = int(input(''))
+        if game_option == 1:
+            blackJack.main(user)
+            database_management.save_userdata(users)
+        if game_option == 2:
+            Slots.play(user)
+            database_management.save_userdata(users)
+
+    elif option == 2:
+        database_management.save_userdata(users)  # DEMO [save function]
+    elif option == 3:
+        options.user_options()
+    elif option == 4:
+        print('Thanks for playing!')
+        break
