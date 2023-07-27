@@ -116,7 +116,7 @@ def login_verification():
     global attempts
 
     if (count == 1):
-        attempts = 0
+        attempts = 1
         count += 1
 
     print("working...")
@@ -129,7 +129,7 @@ def login_verification():
     x = cursor.fetchone()
     print("Attempts: ", attempts)
 
-    while attempts < 3:
+    while attempts < 4:
         if attempts == 3:
             ms.showerror("ERROR", "TOO MANY LOGIN ATTEMPTS! EXITING...")
             exit()
