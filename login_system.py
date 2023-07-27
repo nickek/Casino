@@ -115,11 +115,9 @@ def login_verification():
     global count
     global attempts
 
-
     if (count == 1):
         attempts = 0
         count += 1
-
 
     print("working...")
     print('Connecting to database...')
@@ -141,7 +139,6 @@ def login_verification():
             print(user.username)
             ms.showinfo("Success", "Login Succeeded!")
             login_screen.destroy()
-
             return user
         else:
             attempts += 1
