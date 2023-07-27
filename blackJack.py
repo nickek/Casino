@@ -99,13 +99,13 @@ class Dealer(Player):
 
 def main(user):
     n = 1
-    while n = 1:
+    while n != 1:
         random.seed()  # sets random seed
         money = user.balance
         print("Balance: " + str(money))
         option = input("Would you like to play Blackjack? (1) Yes, (2) No: ")
         print("-------------------------")
-        if option = '1'
+        if option == '1':
             print('Lets play Blackjack!')
             bet = int(input("Please place your bet (min. $25) before playing: "))
             print("Good Luck!")
@@ -156,9 +156,8 @@ def main(user):
                         print("----------------------------------")
                     user.see_cards()  # shows user's cards
                     pc.see_card()  # shows dealer's card
-    if option = '2'
+    if option == '2':
         #quit game
-        break
 #
-if __name__ == "__main__":
-    main()
+        if __name__ == "__main__":
+            main()
