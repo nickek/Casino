@@ -75,42 +75,54 @@ def get_user_data():
     return user_database
 
 
-def save_userdata(users):
+def save_userdata(user):
     # Connect to the database
     print('Connecting to database...')
     conn = sqlite3.connect('user_database.db')
     cursor = conn.cursor()
     print('Successfully connected to database!')
     print('Saving userdata into database...')
-    for user in users:
-        select_query = '''
-                    SELECT * FROM user WHERE username = ?
-                '''
-        cursor.execute(select_query, (user.username,))
-        existing_user = cursor.fetchone()
 
-        if existing_user:
-            update_query = '''
-                        UPDATE user SET password = ?, balance = ?, net_profit = ?
-                        WHERE username = ?
-                    '''
-            cursor.execute(update_query, (user.password, user.balance, user.net_profit, user.username))
-            conn.commit()
-            print(f"User '{user.username}' updated\t Balance: '{user.balance}'")
-            if user.balance >= 100000:
-                insert_query = '''
-                                        INSERT INTO vip (username, password, balance, net_profit)
-                                        VALUES (?, ?, ?, ?)
-                                    '''
-                cursor.execute(insert_query, (user.username, user.password, user.balance, user.net_profit))
-                conn.commit()
+    existing_user = False
+    # Check if the user exists in the database.
+    select_user_query = '''
+            SELECT * FROM user WHERE username = ?
+        '''
+    cursor.execute(select_user_query, (user.username,))
+    existing_user = cursor.fetchone()
 
-        else:
+    if existing_user:
+        # Update the existing user's information.
+        update_query = '''
+                UPDATE user SET password = ?, balance = ?, net_profit = ?
+                WHERE username = ?
+            '''
+        cursor.execute(update_query, (user.password, user.balance, user.net_profit, user.username))
+        print(f"User:{user.username}, balance updated to: {user.balance}")
+
+        # Check if the user is a VIP and update or insert into the 'vip' table accordingly.
+        select_vip_query = '''
+                SELECT * FROM vip WHERE username = ?
+            '''
+        cursor.execute(select_vip_query, (user.username,))
+        existing_vip = cursor.fetchone()
+        if user.balance >= 100000 and not existing_vip:
             insert_query = '''
-                        INSERT INTO user (username, password, balance, net_profit)
-                        VALUES (?, ?, ?, ?)
-                    '''
+                                    INSERT INTO vip (username, password, balance, net_profit)
+                                    VALUES (?, ?, ?, ?)
+                                '''
             cursor.execute(insert_query, (user.username, user.password, user.balance, user.net_profit))
             conn.commit()
-            print(f"New user '{user.username}' added!\t Balance: '{user.balance}'")
+            print(f"user: {user.username}, added to VIP")
 
+    else:
+        print(f"user: {user.username}, does not exist in the database")
+        # insert_query = '''
+        #             INSERT INTO user (username, password, balance, net_profit)
+        #             VALUES (?, ?, ?, ?)
+        #         '''
+        # cursor.execute(insert_query, (user.username, user.password, user.balance, user.net_profit))
+        # conn.commit()
+        # print(f"New user '{user.username}' added!\t Balance: '{user.balance}'")
+    conn.commit()
+    print('Saved userdata')
