@@ -158,6 +158,7 @@ def main(user):
                     pc.see_card()  # shows dealer's card
     if option = '2'
         #quit game
+        break
 #
 if __name__ == "__main__":
     main()
