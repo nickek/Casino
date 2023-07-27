@@ -98,8 +98,8 @@ class Dealer(Player):
             print("It's a tie!")
 
 def main(user):
-    loop = 0
-    while loop = 0:
+    loop = 1
+    while loop = 1:
         random.seed()  # sets random seed
         money = user.balance
         print("Balance: " + str(money))
