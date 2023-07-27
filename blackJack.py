@@ -99,7 +99,7 @@ class Dealer(Player):
 
 def main(user):
     loop = 0
-    while loop = '0'
+    while loop = 0
         random.seed()  # sets random seed
         money = user.balance
         print("Balance: " + str(money))
