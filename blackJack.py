@@ -40,7 +40,8 @@ class Hand:
         return value
 
 class Player:
-    def __init__(self, deck):
+    def __init__(self, deck, balance):
+        self.balance = balance
         self.hand = Hand()
         self.deck = deck
         self.hit()
@@ -86,46 +87,49 @@ class Dealer(Player):
             self.final_see_card()
             print("Dealer busts! You win!")
             #user wins bet
-            money = money + (bet*2)
+            user.balance = money + (bet*2)
 
         elif self.hand.get_value() > user.hand.get_value():
             self.final_see_card()
             print("Dealer wins!")
-            money = money - bet
+            user.balance = money - bet
         elif self.hand.get_value() < user.hand.get_value():
             self.final_see_card()
             print("You beat the dealer! You win!")
-            money = money + (bet * 2)
+            user.balance = money + (bet * 2)
         else:
             self.final_see_card()
             print("It's a tie!")
-            user.balance = money + bet
+            money = money + bet
 
 def main(user):
-
-    random.seed()  # sets random seed
-    money = user.balance
-    print("Your balance: " + str(money))
+    random.seed()
+    print("Your balance:", user.balance)
     print('Lets play Blackjack!')
     print("-------------------------")
     bet = int(input("Please place your bet (min. $25) before playing: "))
+
+    if bet > user.balance:
+        print("Insufficient funds. Please add funds to your account.")
+        return
+
+    user.balance -= bet  # Reduce user's balance by the bet amount
     print("Good Luck!")
     deck = Deck()  # creates a deck
-    user = Player(deck)  # creates a player that will use deck
-    pc = Dealer(deck)  # creates a dealer that will use the same deck
+    user = Player(deck,user.balance)  # creates a player that will use deck
+    pc = Dealer(deck,user.balance)  # creates a dealer that will use the same deck
     user.see_cards()
     pc.see_card()
     if user.win():  # checks user's hand to see if they win
         print("----------------------------------")
         pc.final_see_card()
         print("Blackjack! You win!")
-        winnings = bet * 2.5
-        money = money + winnings
+        winnings = int(bet * 2.5)
+        user.balance += winnings
     elif pc.win():  # checks dealer's hand to see if they win
         print("----------------------------------")
         pc.final_see_card()
         print("The dealer won!")
-        money = money - bet
     else:
         while not user.lose():  # while user has not lost yet
             choice = input("Hit (1), Stand (2), or Double Down (3)?: ")  # ask user to hit or stand
@@ -138,19 +142,17 @@ def main(user):
                     print("You bust! Dealer wins!")
                     user.see_cards()
                     pc.final_see_card()
-                    money = money - bet
-                    print("----------------------------------")
                     break
             elif choice == '2':  # stand
                 user.stand()
                 pc.game(user)
                 break
             elif choice == '3': # double down
-                if money < 25:
+                if user.balance < bet:
                     print('Please add funds to your account')
                 else:
                     #line to double initial bet
-                    bet = bet * 2
+                    bet *= 2
                     user.hit()
                     user.see_cards()
                     pc.game(user)
@@ -159,7 +161,13 @@ def main(user):
                 print("----------------------------------")
                 user.see_cards()  # shows user's cards
                 pc.see_card()  # shows dealer's card
+# Update user balance in the database
+cursor.execute("UPDATE users SET balance = ? WHERE username = ?", (user.balance, user.username))
+connector.commit()
 
-
-    if __name__ == "__main__":
-                main()
+if __name__ == "__main__":
+    username = input("Enter your username: ")
+    cursor.execute("SELECT balance FROM users WHERE username = ?", (username,))
+    balance = cursor.fetchone()[0]
+    user = Player(Deck(), balance)
+    main(user)
