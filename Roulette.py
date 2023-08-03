@@ -5,7 +5,7 @@ import sqlite3
 connector = sqlite3.connect("user_database.db")  # added to connect game to our user database
 cursor = connector.cursor()
 
-# Create the users table if it doesn't exist
+cursor.execute
 
 connector.commit()
 
@@ -155,41 +155,38 @@ def increment_bank(user):
     else:
         user.balance -= betamount
 
-    # Update user balance in the database
-    cursor.execute("UPDATE users SET balance = ? WHERE username = ?", (user.balance, user.username))
+
     connector.commit()
 
     print("Bank: $" + str(user.balance))
 
 
-def play_game(user):
+
+def play(user):
     global broke
 
-    handle_turn(user)
-    roll_ball()
-    check_win()
-    increment_bank(user)
-    check_if_broke(user)
+    while not broke:
+        handle_turn(user)
+        roll_ball()
+        check_win()
+        increment_bank(user)
+        check_if_broke(user)
 
+        if broke:
+            print("Game Over! You have gone broke.")
+            return
 
-# Main program starts here
+        print("Bank: $" + str(user.balance))
+        play_again = input("Continue playing? (y/n): ")
+        if play_again.strip().lower() != 'y':
+            print("Thanks for playing!\n")
+            return
 
 class User:
     def __init__(self, username, balance):
         self.username = username
         self.balance = balance
 
-# Create a user object (Replace with the actual username and balance from the user database)
-#username = "JohnDoe"
-#balance = 1000
-#user = User(username, balance)
-
-#while game_still_going:
-  #  play_game(user)
-   # if broke:
-   #     break
-   # if input("Continue? (y/n)").strip().upper() != 'Y':
-   #     break
 
 if __name__ == "__main__":
     main()
