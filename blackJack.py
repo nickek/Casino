@@ -130,6 +130,8 @@ def main(user):
         while not user.lose():  # while user has not lost yet
             choice = input("Hit (1), Stand (2), or Double Down (3)?: ")  # ask user to hit or stand
             print("-------------------------")
+            user.see_cards()
+            pc.see_card()
             if choice == '1':  # hit
                 user.hit()
                 if user.value() > 21:
