@@ -91,15 +91,15 @@ class Dealer(Player):
         elif self.hand.get_value() > user.hand.get_value():
             self.final_see_card()
             print("Dealer wins!")
-            #user loses bet
+            money = money - bet
         elif self.hand.get_value() < user.hand.get_value():
             self.final_see_card()
             print("You beat the dealer! You win!")
-            #user wins bet
+            money = money + (bet * 2)
         else:
             self.final_see_card()
             print("It's a tie!")
-            #push: money + bet
+            user.balance = money + bet
 
 def main(user):
 
