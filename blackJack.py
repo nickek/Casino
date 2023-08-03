@@ -162,7 +162,7 @@ def main(user):
                 user.see_cards()  # shows user's cards
                 pc.see_card()  # shows dealer's card
 # Update user balance in the database
-cursor.execute("UPDATE users SET balance = ? WHERE username = ?", (user.balance, user.username))
+cursor.execute("UPDATE user SET balance = ? WHERE username = ?", (user.balance, user.username))
 connector.commit()
 
 if __name__ == "__main__":
