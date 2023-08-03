@@ -85,25 +85,29 @@ class Dealer(Player):
         if self.hand.get_value() > 21:
             self.final_see_card()
             print("Dealer busts! You win!")
+            #user wins bet
+            money = money + (bet*2)
+
         elif self.hand.get_value() > user.hand.get_value():
             self.final_see_card()
             print("Dealer wins!")
+            #user loses bet
         elif self.hand.get_value() < user.hand.get_value():
             self.final_see_card()
             print("You beat the dealer! You win!")
+            #user wins bet
         else:
             self.final_see_card()
             print("It's a tie!")
+            #push: money + bet
 
 def main(user):
 
     random.seed()  # sets random seed
     money = user.balance
     print("Your balance: " + str(money))
-    option = input("Would you like to play Blackjack? (1) Yes, (2) No: ")
-    print("-------------------------")
-
     print('Lets play Blackjack!')
+    print("-------------------------")
     bet = int(input("Please place your bet (min. $25) before playing: "))
     print("Good Luck!")
     deck = Deck()  # creates a deck
@@ -115,7 +119,7 @@ def main(user):
         print("----------------------------------")
         pc.final_see_card()
         print("Blackjack! You win!")
-        winnings = bet * 1.5
+        winnings = bet * 2.5
         money = money + winnings
     elif pc.win():  # checks dealer's hand to see if they win
         print("----------------------------------")
