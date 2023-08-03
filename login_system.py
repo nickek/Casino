@@ -31,9 +31,17 @@ def login():
 
     global username_verify
     global password_verify
+    global count
+    global attempts
+
+
 
     username_verify = StringVar()
     password_verify = StringVar()
+    attempts = 0
+    count = 1
+
+
 
     Label(login_screen, text="Username * ").pack()
     username_login_entry = Entry(login_screen, textvariable=username_verify)
@@ -102,6 +110,15 @@ def registration_verification():
 
 def login_verification():
     global user
+    global username_verify
+    global password_verify
+    global count
+    global attempts
+
+    if (count == 1):
+        attempts = 1
+        count += 1
+
     print("working...")
     print('Connecting to database...')
     conn = sqlite3.connect('user_database.db')
@@ -110,19 +127,45 @@ def login_verification():
 
     cursor.execute("SELECT balance FROM user WHERE username = '{}'".format(username_verify.get()))
     x = cursor.fetchone()
-    attempts = 0
+    print("Attempts: ", attempts)
 
-    if x:
-        balance = x[0]
-        user = User(username_verify.get(), password_verify.get(), balance, 0)
-        print(user.username)
-        ms.showinfo("Success", "Login Succeeded!")
-        login_screen.destroy()
-        return user
-    else:
-        ms.showerror("ERROR", "User Not Found!")
-        attempts += 1
-        return None
+    while attempts < 4:
+        if attempts == 3:
+            ms.showerror("ERROR", "TOO MANY LOGIN ATTEMPTS! EXITING...")
+            exit()
+        if x:
+            balance = x[0]
+            user = User(username_verify.get(), password_verify.get(), balance, 0)
+            print(user.username)
+            ms.showinfo("Success", "Login Succeeded!")
+            login_screen.destroy()
+            return user
+        else:
+            attempts += 1
+            ms.showerror("ERROR", "User Not Found!")
+            username_verify.set("")
+            password_verify.set("")
+            print("Count:", count)
+            print("Attempts: ", attempts)
+            break
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
