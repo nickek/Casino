@@ -49,7 +49,7 @@ class Player:
     def __init__(self, deck):
         self.hand = Hand()
         self.deck = deck
-        self.hit()  # Add two cards to player hand
+        self.hit()
         self.hit()
 
     def hit(self):
