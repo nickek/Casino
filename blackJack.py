@@ -147,7 +147,7 @@ def main(user):
                 break
             elif choice == '3': # double down
                 if money < 25:
-                    print('Please add funds to your account BROKIE!')
+                    print('Please add funds to your account')
                 else:
                     #line to double initial bet
                     bet = bet * 2
