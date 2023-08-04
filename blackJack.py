@@ -86,67 +86,102 @@ class Dealer(Player):
             print(f"{card.rank} of {card.suit}")
         print("Total value:", self.hand.get_value())
 
-    def game(self, user):
+    def game(self, user, j):
+        j = 0
         while self.hand.get_value() < 17:
             self.hit()
         if self.hand.get_value() > 21:
             self.final_see_card()
             print("Dealer busts! You win!")
+            j = 1
+            return j
         elif self.hand.get_value() > user.hand.get_value():
             self.final_see_card()
             print("Dealer wins!")
-        elif self.hand.get_value() < user.hand.get_value():
+            j = 1
+            return j
+        elif self.hand.get_value() < user.hand.get_value() & user.hand.get_value() <= 21:
             self.final_see_card()
             print("You beat the dealer! You win!")
+            j = 1
+            return j
         else:
             self.final_see_card()
             print("It's a tie!")
+            j = 1
+            return j
 
 
-def main(user):
-    random.seed()
-    print('Lets play Blackjack!')
-    print("-------------------------")
-    deck = Deck()
-    user = Player(deck)
-    pc = Dealer(deck)
-    user.see_cards()
-    pc.see_card()
+def main():
 
-    if user.win():
-        print("----------------------------------")
-        pc.final_see_card()
-        print("Blackjack! You win!")
-    elif pc.win():
-        print("----------------------------------")
-        pc.final_see_card()
-        print("The dealer won!")
-    else:
-        while not user.lose():
-            choice = input("Hit (1), Stand (2), or Double Down (3)?: ")
-            print("-------------------------")
-            user.see_cards()
-            pc.see_card()
-            if choice == '1':
-                user.hit()
-                if user.value() > 21:
-                    print("You bust! Dealer wins!")
-                    user.see_cards()
-                    pc.final_see_card()
-                    break
-            elif choice == '2':
-                user.stand()
-                pc.game(user)
-                break
-            elif choice == '3':
-                user.hit()
-                user.see_cards()
-                pc.game(user)
-            else:
-                print("Invalid input, please input 1, 2, or 3")
-                print("----------------------------------")
-                user.see_cards()
+    playing = True
+    while playing:
+        random.seed()
+        print("-------------------------")
+        print('Lets play Blackjack!')
+
+        deck = Deck()
+        user = Player(deck)
+        pc = Dealer(deck)
+        user.see_cards()
+        pc.see_card()
+        j=0
+        p=0
+
+        if user.win():
+            print("----------------------------------")
+            pc.final_see_card()
+            print("Blackjack! You win!")
+            # player_op = input('Do you want to keep playing? y/n ')
+            # if player_op == n:
+            #     break
+        elif pc.win():
+            print("----------------------------------")
+            pc.final_see_card()
+            print("The dealer won!")
+        else:
+            while not user.lose():
+                if j == 0:
+                    choice = input("Hit (1), Stand (2), or Double Down (3)?: ")
+                    print("-------------------------")
+                else:
+                    choice = input("Hit (1), Stand (2): ")
+                    print("-------------------------")
+
+
                 pc.see_card()
+                if choice == '1':
+                    user.hit()
+                    user.see_cards()
+                    j = 1
+                    if user.value() > 21:
+                        print("You bust! Dealer wins!")
+                        user.see_cards()
+                        pc.final_see_card()
+                        break
+                elif choice == '2':
+                    user.stand()
+                    p = pc.game(user, p)
+                    break
+                elif choice == '3':
+                    if j == 0:
+                        user.hit()
+                        user.see_cards()
+                        p = pc.game(user, p)
+                        break
+                    else:
+                        print("Invalid input, please input 1 or 2")
+                        print("----------------------------------")
+                else:
+                    print("Invalid input, please input 1, 2, or 3")
+                    print("----------------------------------")
+                    user.see_cards()
+                    pc.see_card()
+
+            if p == 1:
+                player_op = input('Do you want to keep playing? y/n ')
+                if player_op == 'n':
+                     break
 
 
 if __name__ == "__main__":
