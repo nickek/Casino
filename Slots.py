@@ -99,6 +99,7 @@ def printScore(user):
         win = -125
 
     user.balance += win
+    user.net_profit += win
     if (win > 0):
         print(firstWheel + '\t' + secondWheel + '\t' + thirdWheel + ' -- You win $' + str(win))
     else:
