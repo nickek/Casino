@@ -1,5 +1,6 @@
 import random
 import sqlite3
+import database_management
 
 connector = sqlite3.connect("user_database.db")
 cursor = connector.cursor()
@@ -98,7 +99,7 @@ class Dealer(Player):
         elif self.hand.get_value() > user.hand.get_value():
             self.final_see_card()
             print("Dealer wins!")
-            j = 1
+            j = 2
             return j
         elif self.hand.get_value() < user.hand.get_value() & user.hand.get_value() <= 21:
             self.final_see_card()
@@ -108,30 +109,36 @@ class Dealer(Player):
         else:
             self.final_see_card()
             print("It's a tie!")
-            j = 1
+            j = 3
             return j
 
 
-def main():
+def main(user):
 
     playing = True
     while playing:
         random.seed()
+        balance = user.balance
         print("-------------------------")
         print('Lets play Blackjack!')
-
+        print('Your Balance: ' + str(balance))
+        bet = int(input('Please place your bets: '))
+        if bet > balance:
+            print("Insufficient balance. Please place a valid bet.")
+            break
         deck = Deck()
-        user = Player(deck)
+        player = Player(deck)
         pc = Dealer(deck)
-        user.see_cards()
+        player.see_cards()
         pc.see_card()
         j=0
         p=0
 
-        if user.win():
+        if player.win():
             print("----------------------------------")
             pc.final_see_card()
             print("Blackjack! You win!")
+            p = 4
             # player_op = input('Do you want to keep playing? y/n ')
             # if player_op == n:
             #     break
@@ -139,8 +146,9 @@ def main():
             print("----------------------------------")
             pc.final_see_card()
             print("The dealer won!")
+            p = 2
         else:
-            while not user.lose():
+            while not player.lose():
                 if j == 0:
                     choice = input("Hit (1), Stand (2), or Double Down (3)?: ")
                     print("-------------------------")
@@ -151,23 +159,24 @@ def main():
 
                 pc.see_card()
                 if choice == '1':
-                    user.hit()
-                    user.see_cards()
+                    player.hit()
+                    player.see_cards()
                     j = 1
-                    if user.value() > 21:
+                    if player.value() > 21:
                         print("You bust! Dealer wins!")
-                        user.see_cards()
+                        player.see_cards()
                         pc.final_see_card()
+                        p = 2
                         break
                 elif choice == '2':
-                    user.stand()
-                    p = pc.game(user, p)
+                    player.stand()
+                    p = pc.game(player, p)
                     break
                 elif choice == '3':
                     if j == 0:
-                        user.hit()
-                        user.see_cards()
-                        p = pc.game(user, p)
+                        player.hit()
+                        player.see_cards()
+                        p = pc.game(player, p)
                         break
                     else:
                         print("Invalid input, please input 1 or 2")
@@ -175,14 +184,36 @@ def main():
                 else:
                     print("Invalid input, please input 1, 2, or 3")
                     print("----------------------------------")
-                    user.see_cards()
+                    player.see_cards()
                     pc.see_card()
 
-            if p == 1:
-                player_op = input('Do you want to keep playing? y/n ')
+            if p == 1: #regular win
+                user.balance = bet + balance
+                user.net_profit += bet
+                #print(user.balance)
+                player_op = input('Do you want to play again? y/n ')
                 if player_op == 'n':
-                     break
-
+                    break
+            elif p == 2: #dealer win
+                user.balance = balance - bet
+                user.net_profit -= bet
+                #print(user.balance)
+                player_op = input('Do you want to play again? y/n ')
+                if player_op == 'n':
+                    break
+            elif p == 3: #push
+                user.balance = balance
+                #print(user.balance)
+                player_op = input('Do you want to play again? y/n ')
+                if player_op == 'n':
+                    break
+            elif p == 4: #blackjack
+                user.balance = (bet*2.5) + balance
+                user.net_profit += (bet * 2.5)
+                #print(user.balance)
+                player_op = input('Do you want to play again? y/n ')
+                if player_op == 'n':
+                    break
 
 if __name__ == "__main__":
     main()
