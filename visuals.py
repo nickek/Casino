@@ -53,6 +53,6 @@ def games():
 [1] - Black Jack
 [2] - Slots
 [3] - Roulette
-[4] - Poker
+[4] - Higher or Lower
 [5] - Exit 
     ''')

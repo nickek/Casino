@@ -112,7 +112,7 @@ class Dealer(Player):
             return j
 
 
-def main():
+def main(user):
 
     playing = True
     while playing:

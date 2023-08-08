@@ -60,7 +60,7 @@ while True:
             database_management.save_userdata(user)
 
     elif option == 2:
-        database_management.save_userdata(users)  # DEMO [save function]
+        database_management.save_userdata(user)  # DEMO [save function]
     elif option == 3:
         visuals.user_info(user)
         options.user_options(user)
