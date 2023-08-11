@@ -1,4 +1,6 @@
 import random
+import sqlite3
+import database_management
 
 class Card(object):
     def __init__(self, name, value, suit):
@@ -54,26 +56,60 @@ class Player(object):
     def __init__(self):
         # PLAYER ATTRIBUTES
         self.cards = []
-        self.money = 0
 
     def cardCount(self):
         return len(self.cards)
-        pass
 
     def addCard(self, card):
         self.cards.append(card)
 
-def interpreter():
+def give_money(user, bet_amount):
+    conn = sqlite3.connect('user_database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT balance FROM user")
+    # FETCH DATA FOR USER
+    user_data = cursor.fetchone()
+    if user_data:
+       user_balance = user_data[0]
+       new_balance = user_balance + bet_amount
+
+    sql = "UPDATE user SET balance = ? WHERE username = ?"
+    val = (new_balance, user.username)
+
+    cursor.execute(sql, val)
+
+    conn.close()
+
+def take_money(user, bet_amount):
+    conn = sqlite3.connect('user_database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT balance FROM user")
+    # FETCH DATA FOR USER
+    user_data = cursor.fetchone()
+    if user_data:
+       user_balance = user_data[0]
+       new_balance = user_balance - bet_amount
+
+    sql = "UPDATE user SET balance = ? WHERE username = ?"
+    val = (new_balance, user.username)
+
+    cursor.execute(sql, val)
+    conn.close()
+
+
+def main(user):
     player = Player()
 
     # INITIAL AMOUNT
-    player.money = 10000
+    balance = user.balance
 
     # NUMBER OF CARDS DEALT
     num_cards = 0
 
     # BET AMOUNT
-    bet_amount = 0
+    bet_amount = 0.0
 
     # BET CHOICE
     bet_low = False
@@ -93,7 +129,9 @@ def interpreter():
 
         validInput = False
         while not validInput:
-            print(f"You have: ${player.money}")
+            print("--------------------------")
+            print("Welcome to Higher or Lower!")
+            print(f"You have: ${balance}")
             print("Do you want to place a low, mid, or high bet?")
             print("Low: ($500 = 5 cards), Mid: ($2500 = 10 cards), High: ($5000 = 15 cards)")
             print("Type 'exit' to Exit")
@@ -105,27 +143,26 @@ def interpreter():
 
             if inputStr == "low":
                 print("You chose a low bet!")
-                bet_amount = 500
+                bet_amount = 500.0
                 bet_low = True
                 num_cards = 5
 
             if inputStr == "mid":
                 print("You chose a mid bet!")
-                bet_amount = 2500
+                bet_amount = 2500.0
                 bet_mid = True
                 num_cards = 10
 
             if inputStr == "high":
                 print("You chose a high bet!")
-                bet_amount = 5000
+                bet_amount = 5000.0
                 bet_high = True
                 num_cards = 15
 
+            # CHECK IF USER'S BET IS UNDER THEIR CURRENT EARNINGS
             try:
-                # CHECK IF USER'S BET IS UNDER THEIR CURRENT EARNINGS
-                    if player.money - bet_amount > 0:
-                        player.money = player.money - bet_amount
-                        validInput = True
+                if user.balance - bet_amount > 0.0:
+                    validInput = True
             except:
                 print("Not enough money: Please choose a lower bet / exit the game")
 
@@ -158,6 +195,7 @@ def interpreter():
                 else:
                     print(f"Wrong! Lost ${bet_amount}!")
                     wrong_guess = True
+                    take_money(user, bet_amount)
                     break
             if wrong_guess:
                 player.cards = []
@@ -165,13 +203,15 @@ def interpreter():
             else:
                 if bet_low:
                     print(f"You won {bet_amount * 2}")
+                    reward_money = bet_amount * 2
                 if bet_mid:
                     print(f"You won {bet_amount * 4}")
+                    reward_money = bet_amount * 4
                 if bet_high:
                     print(f"You won {bet_amount * 8}")
-                player.money = player.money + bet_amount
+                    reward_money = bet_amount * 8
+                take_money(user, bet_amount)
+                give_money(user, reward_money)
                 player.cards = []
                 break
 
-# MAIN
-interpreter()
