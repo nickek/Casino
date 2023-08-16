@@ -191,6 +191,8 @@ def main(user):
                 bet_high = True
                 num_cards = 15
 
+            take_money(user, bet_amount)
+
             # CHECK IF USER'S BET IS UNDER THEIR CURRENT EARNINGS
             try:
                 if user.balance - bet_amount > 0.0:
@@ -227,7 +229,6 @@ def main(user):
                 else:
                     print(f"Wrong! Lost ${bet_amount}!")
                     wrong_guess = True
-                    take_money(user, bet_amount)
                     update_netprofit(user, bet_amount, False)
                     break
             if wrong_guess:
