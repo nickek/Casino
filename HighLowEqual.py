@@ -243,6 +243,7 @@ def main(user):
                 if bet_high:
                     print(f"You won {bet_amount * 8}")
                     reward_money = bet_amount * 8
+                give_money(user, reward_money)
                 update_netprofit(user, reward_money, True)
                 player.cards = []
                 break
