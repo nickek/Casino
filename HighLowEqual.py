@@ -41,7 +41,7 @@ class StandardDeck(Deck):
                   "J": 11,
                   "Q": 12,
                   "K": 13,
-                  "A": 14}
+                  "A": 1}
 
         # NESTED LOOP TO CREATE DECK (LIST)
         for name in values:
@@ -67,7 +67,7 @@ def give_money(user, bet_amount):
     conn = sqlite3.connect('user_database.db')
     cursor = conn.cursor()
 
-    cursor.execute("SELECT balance FROM user")
+    cursor.execute("SELECT balance FROM user WHERE username = ?", (user.username,))
     # FETCH DATA FOR USER
     user_data = cursor.fetchone()
     if user_data:
@@ -78,14 +78,14 @@ def give_money(user, bet_amount):
     val = (new_balance, user.username)
 
     cursor.execute(sql, val)
-
+    conn.commit()
     conn.close()
 
 def take_money(user, bet_amount):
     conn = sqlite3.connect('user_database.db')
     cursor = conn.cursor()
 
-    cursor.execute("SELECT balance FROM user")
+    cursor.execute("SELECT balance FROM user WHERE username = ?", (user.username,))
     # FETCH DATA FOR USER
     user_data = cursor.fetchone()
     if user_data:
@@ -96,14 +96,33 @@ def take_money(user, bet_amount):
     val = (new_balance, user.username)
 
     cursor.execute(sql, val)
+    conn.commit()
     conn.close()
 
+def update_netprofit(user, bet_amount, did_you_win):
+    conn = sqlite3.connect('user_database.db')
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT net_profit FROM user WHERE username = ?", (user.username,))
+    # FETCH DATA FOR USER
+    user_data = cursor.fetchone()
+    if user_data:
+       user_netprofit = user_data[0]
+
+    if did_you_win == True:
+        user_netprofit = user_netprofit + bet_amount
+    else:
+        user_netprofit = user_netprofit - bet_amount
+
+    sql = "UPDATE user SET net_profit = ? WHERE username = ?"
+    val = (user_netprofit, user.username)
+
+    cursor.execute(sql, val)
+    conn.commit()
+    conn.close()
 
 def main(user):
     player = Player()
-
-    # INITIAL AMOUNT
-    balance = user.balance
 
     # NUMBER OF CARDS DEALT
     num_cards = 0
@@ -127,11 +146,24 @@ def main(user):
         deck = StandardDeck()
         deck.shuffle()
 
+        # INITIAL AMOUNT
+        conn = sqlite3.connect('user_database.db')
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT balance, net_profit FROM user WHERE username = ?", (user.username,))
+
+        user_data = cursor.fetchone()
+
+        if user_data:
+            user_balance = user_data[0]
+            user_netprofit = user_data[1]
+
         validInput = False
         while not validInput:
             print("--------------------------")
             print("Welcome to Higher or Lower!")
-            print(f"You have: ${balance}")
+            print(f"You have: ${user_balance}")
+            print(f"Net profit: ${user_netprofit}")
             print("Do you want to place a low, mid, or high bet?")
             print("Low: ($500 = 5 cards), Mid: ($2500 = 10 cards), High: ($5000 = 15 cards)")
             print("Type 'exit' to Exit")
@@ -196,6 +228,7 @@ def main(user):
                     print(f"Wrong! Lost ${bet_amount}!")
                     wrong_guess = True
                     take_money(user, bet_amount)
+                    update_netprofit(user, bet_amount, False)
                     break
             if wrong_guess:
                 player.cards = []
@@ -210,8 +243,7 @@ def main(user):
                 if bet_high:
                     print(f"You won {bet_amount * 8}")
                     reward_money = bet_amount * 8
-                take_money(user, bet_amount)
-                give_money(user, reward_money)
+                update_netprofit(user, reward_money, True)
                 player.cards = []
                 break
 
