@@ -99,7 +99,7 @@ def take_money(user, bet_amount):
     conn.commit()
     conn.close()
 
-def update_netprofit(user, bet_amount, did_you_win):
+def update_netprofit(user, bet_amount, reward_money, did_you_win):
     conn = sqlite3.connect('user_database.db')
     cursor = conn.cursor()
 
@@ -110,7 +110,7 @@ def update_netprofit(user, bet_amount, did_you_win):
        user_netprofit = user_data[0]
 
     if did_you_win == True:
-        user_netprofit = user_netprofit + bet_amount
+        user_netprofit = user_netprofit + reward_money - bet_amount
     else:
         user_netprofit = user_netprofit - bet_amount
 
@@ -229,7 +229,8 @@ def main(user):
                 else:
                     print(f"Wrong! Lost ${bet_amount}!")
                     wrong_guess = True
-                    update_netprofit(user, bet_amount, False)
+                    reward_money = 0
+                    update_netprofit(user, bet_amount, reward_money, False)
                     break
             if wrong_guess:
                 player.cards = []
@@ -245,7 +246,7 @@ def main(user):
                     print(f"You won {bet_amount * 8}")
                     reward_money = bet_amount * 8
                 give_money(user, reward_money)
-                update_netprofit(user, reward_money, True)
+                update_netprofit(user, bet_amount, reward_money, True)
                 player.cards = []
                 break
 
