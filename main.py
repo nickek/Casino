@@ -8,6 +8,7 @@ import Slots
 import options
 import blackJack
 import Roulette
+import HighLowEqual
 
 # Initializing user database
 database_management.init_user_database()
@@ -61,6 +62,9 @@ while True:
             database_management.save_userdata(user)
         if game_option == 3:
             Roulette.play(user)
+            database_management.save_userdata(user)
+        if game_option == 4:
+            HighLowEqual.main(user)
             database_management.save_userdata(user)
 
     elif option == 2:
