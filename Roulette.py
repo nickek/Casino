@@ -60,7 +60,7 @@ def handle_turn(user):
             if bet_choice not in bet_options:
                 raise ValueError("Invalid bet option.")
 
-            betamount = int(input(f"\nBet amount? (€{user.balance} available)\n"))
+            betamount = int(input(f"\nBet amount? (${user.balance} available)\n"))
             if betamount <= 0 or betamount > user.balance:
                 raise ValueError("Invalid bet amount.")
 
