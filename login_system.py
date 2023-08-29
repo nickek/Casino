@@ -7,15 +7,17 @@ from tkinter import messagebox as ms
 def existing_account():
     global main_screen
     main_screen = Tk()
-    main_screen.geometry("300x250")
+    main_screen.geometry("300x350")
     main_screen.title("Account Login")
 
-    Label(text="Choose Login Or Register", bg="blue", width="300", height="2", font=("Calibri", 13)).pack()
+    Label(text="Choose Login Or Register", bg="DeepSkyBlue2", width="300", height="2", font=("Calibri", 13)).pack()
     Label(text="").pack()
 
-    Button(text="Login", height="2", width="30", command=login).pack()
+    login_button = PhotoImage(file="C:/Users/secakusumae/OneDrive - Wentworth Institute of Technology/Pictures/small_login.png")
+    Button(main_screen, image=login_button, command=login).pack()
     Label(text="").pack()
-    Button(text="Register", height="2", width="30", command=register).pack()
+    register_button = PhotoImage(file="C:/Users/secakusumae/OneDrive - Wentworth Institute of Technology/Pictures/small_register.png")
+    Button(main_screen, command=register, image=register_button).pack()
     main_screen.mainloop()
     return user
 
@@ -34,14 +36,10 @@ def login():
     global count
     global attempts
 
-
-
     username_verify = StringVar()
     password_verify = StringVar()
     attempts = 0
     count = 1
-
-
 
     Label(login_screen, text="Username * ").pack()
     username_login_entry = Entry(login_screen, textvariable=username_verify)
