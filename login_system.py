@@ -49,7 +49,9 @@ def login():
     password__login_entry = Entry(login_screen, textvariable=password_verify, show='*')
     password__login_entry.pack()
     Label(login_screen, text="").pack()
+    login_screen.bind('<Return>', lambda event: login_verification())
     Button(login_screen, text="Login", width=10, height=1, command=login_verification).pack()
+
 
 
 def register():
@@ -64,6 +66,7 @@ def register():
     global start_balance
     global username_register
     global password_register
+    global username_register_entry
 
     username_register = StringVar()
     password_register = StringVar()
@@ -80,6 +83,7 @@ def register():
     balance_register_entry = Entry(register_screen, textvariable=start_balance)
     balance_register_entry.pack()
     Label(register_screen, text="").pack()
+    register_screen.bind('<Return>', lambda event: registration_verification())
     Button(register_screen, text="Register", width=10, height=1, command=registration_verification).pack()
 
 
@@ -91,12 +95,24 @@ def registration_verification():
     cursor = conn.cursor()
     print('Successfully connected to database!')
 
+    if len(username_register_entry.get()) == 0:
+        ms.showerror("ERROR", "Registration failed!")
+        return None
+    cursor.execute("SELECT username FROM user WHERE username = '{}'".format(username_register.get()))
+    exists = cursor.fetchall()
+    if exists:
+        ms.showerror("ERROR", "USERNAME already exist")
+        return None
+
+
     cursor.execute("INSERT into user VALUES('{}','{}','{}','{}')".format(username_register.get(), password_register.get(), start_balance.get(), 0))
     conn.commit()
     cursor.execute("SELECT balance FROM user WHERE username = '{}'".format(username_register.get()))
-    y = cursor.fetchone()
+    new = cursor.fetchone()
     # ADD VIP CHECK????
-    if y:
+
+
+    if new:
         ms.showinfo("Congrats!", "Registration Successful!")
         user = User(username_register.get(), password_register.get(), start_balance.get(), 0)
         register_screen.destroy()
@@ -112,6 +128,7 @@ def login_verification():
     global password_verify
     global count
     global attempts
+
 
     if (count == 1):
         attempts = 1
