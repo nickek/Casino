@@ -157,24 +157,3 @@ def login_verification():
             print("Count:", count)
             print("Attempts: ", attempts)
             break
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
